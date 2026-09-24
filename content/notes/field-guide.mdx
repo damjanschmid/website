@@ -1,0 +1,84 @@
+---
+title: A field guide to writing notes
+date: 2026-09-23
+description: Everything a note can do. Only visible in dev, delete whenever.
+category: Meta
+accent: "#8fd3c1"
+draft: true
+---
+
+This note is a cheat sheet for writing on this site. It's marked `draft: true`, so it only shows up when you run the site locally.
+
+## The basics
+
+Every note is an `.mdx` file in `content/notes`. The file name becomes the URL. At the top goes the frontmatter:
+
+```yaml
+---
+title: My note
+date: 2026-09-24
+description: One line for the list.
+category: Thoughts
+accent: "#e8b04b"   # optional
+draft: true         # optional
+---
+```
+
+Categories are made up on the fly. Use a new one and it appears as a filter on the notes page. The `accent` colour tints links, highlights and scribbles in that note only, so each note can have its own mood while the layout stays the same.
+
+Regular markdown works: **bold**, _italic_, [links](https://example.com), lists, `code`, tables and quotes.
+
+> A quote looks like this.
+
+- a list
+- with a few
+- things in it
+
+## The fun parts
+
+These work anywhere in a note without importing anything.
+
+<Mark>Mark</Mark> draws a highlighter over text when you scroll to it. <Scribble>Scribble</Scribble> draws a hand-made underline.
+
+<Callout title="Callout">For asides, warnings and tips. You can change the icon with `icon="☞"`.</Callout>
+
+<PullQuote cite="Someone wise">Pull quotes are for the one line you want people to leave with.</PullQuote>
+
+A figure. Click it to zoom:
+
+<Figure src="/notes/city.svg" alt="A city at night" caption="Figures take a caption. Add wide to let them break out of the column." wide />
+
+A stack of prints that fans out on hover:
+
+<Gallery
+  photos={[
+    { src: "/notes/lake.svg", caption: "one" },
+    { src: "/notes/dune.svg", caption: "two" },
+    { src: "/notes/forest.svg", caption: "three" },
+  ]}
+/>
+
+Or a grid:
+
+<Gallery
+  variant="grid"
+  photos={[
+    { src: "/notes/lake.svg" },
+    { src: "/notes/dune.svg" },
+    { src: "/notes/forest.svg" },
+    { src: "/notes/city.svg" },
+    { src: "/notes/paper.svg" },
+    { src: "/notes/lake.svg" },
+  ]}
+  caption="Put your photos in /public/notes."
+/>
+
+Plain markdown images work too, and zoom on click:
+
+![Scraps of paper](/notes/paper.svg)
+
+Three dashes make a divider:
+
+---
+
+That's everything.
