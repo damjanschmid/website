@@ -48,6 +48,7 @@ export const geistPixel = Geist_Pixel({
   variable: "--font-geist-pixel",
   subsets: ["latin"],
   preload: false,
+  adjustFontFallback: false,
 });
 
 export const fontVariables = [

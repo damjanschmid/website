@@ -35,8 +35,8 @@ export function Speaker() {
         className="grid aspect-square"
         style={{
           gridTemplateColumns: `repeat(${GRID}, 1fr)`,
-          gap: u(7),
-          padding: u(13),
+          gap: u(8),
+          padding: u(16),
           borderRadius: u(16),
           background: "linear-gradient(180deg, #e7e3db, #ebe8e1)",
           boxShadow: "inset 0 2px 4px rgb(0 0 0 / .1), inset 0 -1px 0 rgb(255 255 255 / .8)",

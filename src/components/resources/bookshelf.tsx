@@ -17,7 +17,7 @@ export function Bookshelf({ books }: { books: Resource[] }) {
         {books.map((book, i) => {
           const bg = book.color ?? "#0b0b0b";
           const fg = readableOn(bg);
-          const height = 190 + ((book.title.length * 7) % 5) * 14;
+          const height = Math.min(290, Math.max(180, book.title.length * 7 + 90)) + ((book.title.length * 7) % 3) * 8;
           const width = 38 + ((book.title.length * 3) % 4) * 6;
           return (
             <motion.a
@@ -37,7 +37,7 @@ export function Bookshelf({ books }: { books: Resource[] }) {
               <span className="h-px w-3/5 bg-current opacity-40" />
               <span
                 className="line-clamp-1 font-grotesk text-[12px] font-semibold tracking-tight"
-                style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", maxHeight: height - 70 }}
+                style={{ writingMode: "vertical-rl", transform: "rotate(180deg)", maxHeight: height - 64 }}
               >
                 {book.title}
               </span>

@@ -309,9 +309,9 @@ export function Receipt({ lines }: { lines: [string, string][] }) {
 export function CoffeeRing() {
   return (
     <svg viewBox="0 0 120 120" style={{ width: u(150) }} className="block mix-blend-multiply">
-      <circle cx="60" cy="60" r="48" fill="none" stroke="#a8763e" strokeOpacity="0.16" strokeWidth="5" strokeDasharray="120 8 60 4 200 14" />
-      <circle cx="60" cy="60" r="44" fill="none" stroke="#a8763e" strokeOpacity="0.08" strokeWidth="2" />
-      <path d="M100 30 q6 -8 10 -4" stroke="#a8763e" strokeOpacity="0.14" strokeWidth="3" fill="none" strokeLinecap="round" />
+      <circle cx="60" cy="60" r="48" fill="none" stroke="#a8763e" strokeOpacity="0.09" strokeWidth="4" strokeDasharray="120 8 60 4 200 14" />
+      <circle cx="60" cy="60" r="44" fill="none" stroke="#a8763e" strokeOpacity="0.05" strokeWidth="2" />
+      <path d="M100 30 q6 -8 10 -4" stroke="#a8763e" strokeOpacity="0.08" strokeWidth="3" fill="none" strokeLinecap="round" />
     </svg>
   );
 }

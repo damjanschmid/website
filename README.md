@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# website
 
-## Getting Started
+My corner of the internet. Four pages, four moods:
 
-First, run the development server:
+| Page | Route | Style |
+| --- | --- | --- |
+| Home | `/` | Paper. A short bio and a collage you can rearrange, with a speaker that shows what I'm listening to. |
+| Notes | `/notes` | Ink. Dark, quiet, editorial. MDX with categories. |
+| Resources | `/resources` | Swiss. Articles, books, tools and people. Books live on a shelf. |
+| Everything else | `/else` | Graphite. An infinite canvas for projects, pictures and random stuff. |
+
+Colours morph between pages as you navigate, and a dock at the bottom ties it all together.
+
+## Running it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Editing content
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Most things live in `content/`, so you rarely need to touch components.
 
-## Learn More
+- **Notes**: add an `.mdx` file to `content/notes/`. The file name is the URL. See `content/notes/field-guide.mdx` (only visible in dev) for everything a note can do: galleries, zoomable figures, highlighter marks, scribbles, pull quotes, callouts, and a per-note accent colour.
+- **Resources**: edit `content/resources.ts`. Give books a `color` for their spine.
+- **Canvas**: edit `content/canvas.ts`. Every item has world coordinates (`x`, `y`) around the centre.
+- **Greetings**: edit `src/content/greetings.ts`.
+- **Bio**: edit `src/components/home/bio.tsx`.
+- **Collage**: edit the `pieces` list in `src/components/home/collage.tsx`. For a real photo, put it in `public/collage/` and pass `src` to `<Polaroid>`.
+- **Name, links, location**: `src/lib/site.ts`.
 
-To learn more about Next.js, take a look at the following resources:
+## Now playing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Copy `.env.example` to `.env.local` and fill in either Last.fm (easiest) or Spotify. Without keys the site shows a rotating demo track.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Secrets
 
-## Deploy on Vercel
+- The Konami code (↑ ↑ ↓ ↓ ← → ← → B A) anywhere.
+- Click the greeting on the homepage a few times.
+- Type my name.
+- Wander far enough on the canvas.
+- Leave the tab.
+- Open the console.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Stack
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Next.js 16 (App Router, Turbopack), React 19, Tailwind CSS 4, [Motion](https://motion.dev) for animation, MDX for notes. Fonts: Instrument Serif, Newsreader, Geist, Geist Mono, Geist Pixel, Inter Tight, Reenie Beanie and Special Elite.
