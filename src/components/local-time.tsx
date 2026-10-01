@@ -16,7 +16,7 @@ function timeParts(timeZone: string) {
 }
 
 /* Local time somewhere, with digits that roll over when they change */
-export function LocalTime({ timeZone, label }: { timeZone: string; label: string }) {
+export function LocalTime({ timeZone, place }: { timeZone: string; place: string }) {
   const [t, setT] = useState<{ hour: string; minute: string } | null>(null);
 
   useEffect(() => {
@@ -26,27 +26,20 @@ export function LocalTime({ timeZone, label }: { timeZone: string; label: string
     return () => clearInterval(id);
   }, [timeZone]);
 
-  const h = t ? Number(t.hour) : 12;
-  const asleep = h < 7 || h >= 23;
-
   return (
-    <span className="inline-flex items-center gap-2 font-mono text-[12px] tabular-nums text-muted" title={asleep ? "Probably asleep" : "Probably awake"}>
-      <span className="relative flex size-2">
-        {!asleep && <span className="absolute inset-0 animate-ping rounded-full bg-[#3fb950] opacity-40" />}
-        <span className={`relative size-2 rounded-full ${asleep ? "bg-muted/60" : "bg-[#3fb950]"}`} />
-      </span>
-      <span>{label}</span>
-      <span className="inline-flex overflow-hidden text-fg">
+    <span className="inline-flex items-center gap-[0.6em] tabular-nums">
+      <span className="inline-flex">
         {t ? (
           <>
             <Digits value={t.hour} />
-            <span className="animate-pulse px-px">:</span>
+            <span className="animate-pulse">:</span>
             <Digits value={t.minute} />
           </>
         ) : (
           <span className="opacity-0">00:00</span>
         )}
       </span>
+      <span>{place}</span>
     </span>
   );
 }
@@ -55,7 +48,7 @@ function Digits({ value }: { value: string }) {
   return (
     <span className="inline-flex">
       {value.split("").map((d, i) => (
-        <span key={i} className="relative inline-block h-[1.2em] overflow-hidden leading-[1.2em]">
+        <span key={i} className="relative inline-block h-[1lh] overflow-hidden">
           <AnimatePresence mode="popLayout" initial={false}>
             <motion.span
               key={d}

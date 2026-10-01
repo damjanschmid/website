@@ -1,10 +1,9 @@
 /*
  * Greetings for the homepage. One is picked on every visit, based on
  * time of day, weekday, special dates and whether you've been here before.
- * Clicking the greeting shuffles to another one. Click it enough times
- * and you get one of the secret ones.
+ * Clicking the greeting shuffles to another one.
  *
- * `note` shows up as a small hint on hover (handy for the Swiss ones).
+ * These are placeholders, write your own. `note` is shown as a tooltip.
  */
 
 export type Greeting = { text: string; note?: string };
@@ -74,12 +73,6 @@ const specialDays: { month: number; day: number; greeting: Greeting }[] = [
   { month: 12, day: 24, greeting: { text: "Merry Christmas" } },
   { month: 12, day: 25, greeting: { text: "Merry Christmas" } },
   { month: 12, day: 31, greeting: { text: "Almost next year" } },
-];
-
-export const secretGreetings: Greeting[] = [
-  { text: "Okay, you found it. Hi, friend." },
-  { text: "Seven clicks. You're thorough." },
-  { text: "This one's just for you" },
 ];
 
 function timeOfDay(hour: number) {

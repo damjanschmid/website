@@ -4,8 +4,14 @@
     {
       "name": "dev",
       "runtimeExecutable": "pnpm",
-      "runtimeArgs": ["dev"],
+      "runtimeArgs": [
+        "dev"
+      ],
       "port": 3000
+    },
+    {
+      "name": "site",
+      "url": "http://localhost:3000"
     }
   ]
 }

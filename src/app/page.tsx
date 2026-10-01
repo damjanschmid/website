@@ -1,46 +1,45 @@
-import { Bio } from "@/components/home/bio";
-import { Collage } from "@/components/home/collage";
-import { Greeting } from "@/components/home/greeting";
-import { ArrowUpRightIcon, HoverIcon } from "@/components/icons";
+import { AvatarSpinner } from "@/components/avatar-spinner";
+import { CopyEmail } from "@/components/copy-email";
+import { Greeting } from "@/components/greeting";
 import { LocalTime } from "@/components/local-time";
 import { Reveal } from "@/components/reveal";
 import { site } from "@/lib/site";
+import pkg from "../../package.json";
 
 export default function Home() {
   return (
-    <main data-theme="paper" className="paper-texture relative min-h-dvh overflow-x-clip">
-      <header className="mx-auto flex max-w-[1280px] items-center justify-between px-6 pt-6 sm:px-10 sm:pt-8">
-        <Reveal y={-6} className="flex items-center gap-2.5 text-[14px] font-medium tracking-tight">
-          <span className="size-2.5 rounded-full bg-accent" />
-          {site.name}
-        </Reveal>
-        <Reveal y={-6} delay={0.1}>
-          <LocalTime timeZone={site.timeZone} label={site.location} />
-        </Reveal>
-      </header>
+    <main className="relative grid min-h-dvh place-items-center px-6 pt-16 pb-24">
+      <section className="w-full max-w-[520px]">
+        <AvatarSpinner src="/me.jpg" alt={site.name} />
 
-      <section className="mx-auto grid max-w-[1280px] items-center gap-10 px-6 pt-14 pb-36 sm:px-10 lg:min-h-[calc(100dvh-80px)] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-16 lg:pt-4 lg:pb-28">
-        <div className="relative z-10 lg:pb-10">
+        <div className="mt-8">
           <Greeting />
-          <Reveal delay={0.5} className="mt-10">
-            <Bio />
-          </Reveal>
-          <Reveal delay={0.7} className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-[14px]">
-            {site.links.map((l) => (
-              <a key={l.href} href={l.href} target="_blank" rel="noreferrer" className="group inline-flex items-center gap-1 text-fg">
-                <HoverIcon className="inline-flex items-center gap-1">
-                  <span className="link-draw">{l.label}</span>
-                  <ArrowUpRightIcon size={13} className="text-muted transition-colors group-hover:text-accent" />
-                </HoverIcon>
-              </a>
-            ))}
-          </Reveal>
         </div>
 
-        <div className="relative -mx-2 sm:mx-0">
-          <Collage />
-        </div>
+        {/* Placeholder bio. Rewrite this in your own words. */}
+        <Reveal delay={0.35} className="mt-6 max-w-[34rem] space-y-4 text-[17px] leading-[1.6] text-fg/75">
+          <p>
+            I&apos;m {site.firstName}. I like making things that feel good to use, and I collect a lot along the way:
+            links, books, songs, photos, half-finished ideas.
+          </p>
+          <p>Based in {site.location}. Always up for a good conversation.</p>
+        </Reveal>
+
+        <Reveal delay={0.5} className="mt-9">
+          <CopyEmail email={site.email} />
+        </Reveal>
       </section>
+
+      <footer className="fixed inset-x-0 bottom-0 flex items-center justify-between px-6 pb-5 font-mono text-[12px] leading-[18px] text-muted sm:px-8 sm:pb-6">
+        <Reveal y={6} delay={0.7}>
+          <LocalTime timeZone={site.timeZone} place={site.location} />
+        </Reveal>
+        <Reveal y={6} delay={0.8}>
+          <a href={site.repo} target="_blank" rel="noreferrer" className="link-draw transition-colors hover:text-fg" title="Source on GitHub">
+            v{pkg.version}
+          </a>
+        </Reveal>
+      </footer>
     </main>
   );
 }
