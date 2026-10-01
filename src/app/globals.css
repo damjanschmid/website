@@ -23,8 +23,6 @@
 }
 
 html {
-  /* the pull-up at the bottom replaces the browser's own bounce */
-  overscroll-behavior-y: none;
   background: var(--bg);
   color: var(--fg);
   -webkit-font-smoothing: antialiased;
@@ -41,6 +39,13 @@ body {
 ::selection {
   background: var(--accent);
   color: var(--bg);
+}
+
+/* on touch screens the pull-up at the bottom replaces the browser's own bounce */
+@media (pointer: coarse) {
+  html {
+    overscroll-behavior-y: none;
+  }
 }
 
 :focus-visible {

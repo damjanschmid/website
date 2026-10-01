@@ -4,12 +4,12 @@ import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "
 import { useEffect, useRef, useState } from "react";
 
 /*
- * Keep scrolling past the bottom and the page lifts like a rubber band,
+ * Keep swiping past the bottom and the page lifts like a rubber band,
  * revealing a sheet underneath. Pull far enough and it arms ("Let go"),
  * then everything snaps back down when you release.
  *
- * Works with mouse wheels, trackpads and touch. The sheet's content is a
- * placeholder for now.
+ * Touch only: on desktop the page behaves normally. The sheet's content
+ * is a placeholder for now.
  */
 
 const MAX = 280; // px the page can lift at most
@@ -30,7 +30,6 @@ export function PullUp({ children }: { children: React.ReactNode }) {
   const handleWidth = useTransform(pull, [0, THRESHOLD, MAX], [28, 44, 52]);
 
   useEffect(() => {
-    let releaseTimer: ReturnType<typeof setTimeout>;
     let touchStart: number | null = null;
 
     const atBottom = () => window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
@@ -44,7 +43,7 @@ export function PullUp({ children }: { children: React.ReactNode }) {
       if (isArmed !== armedRef.current) {
         armedRef.current = isArmed;
         setArmed(isArmed);
-        if (isArmed) navigator.vibrate?.(8);
+        if (isArmed && navigator.userActivation?.hasBeenActive) navigator.vibrate?.(8);
       }
     };
 
@@ -57,17 +56,10 @@ export function PullUp({ children }: { children: React.ReactNode }) {
       animate(pull, 0, { type: "spring", stiffness: 380, damping: wasArmed ? 22 : 34 });
     };
 
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey) return; // pinch zoom
-      if (raw.current === 0 && (e.deltaY <= 0 || !atBottom())) return;
-      e.preventDefault();
-      setPull(raw.current + e.deltaY * (e.deltaMode === 1 ? 16 : 1));
-      clearTimeout(releaseTimer);
-      releaseTimer = setTimeout(release, 140);
-    };
-
     const onTouchStart = (e: TouchEvent) => {
-      touchStart = atBottom() ? e.touches[0].clientY : null;
+      // spinning the avatar or tapping the button shouldn't lift the page
+      const onControl = (e.target as Element | null)?.closest("button, a");
+      touchStart = atBottom() && !onControl ? e.touches[0].clientY : null;
     };
     const onTouchMove = (e: TouchEvent) => {
       if (touchStart === null) return;
@@ -82,14 +74,11 @@ export function PullUp({ children }: { children: React.ReactNode }) {
       release();
     };
 
-    window.addEventListener("wheel", onWheel, { passive: false });
     window.addEventListener("touchstart", onTouchStart, { passive: true });
     window.addEventListener("touchmove", onTouchMove, { passive: false });
     window.addEventListener("touchend", onTouchEnd);
     window.addEventListener("touchcancel", onTouchEnd);
     return () => {
-      clearTimeout(releaseTimer);
-      window.removeEventListener("wheel", onWheel);
       window.removeEventListener("touchstart", onTouchStart);
       window.removeEventListener("touchmove", onTouchMove);
       window.removeEventListener("touchend", onTouchEnd);
