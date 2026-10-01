@@ -61,12 +61,12 @@ export function CopyEmail({ email }: { email: string }) {
           transition={spring}
           aria-label={copied ? "Email copied to clipboard" : `Copy email address ${email}`}
           style={{ width: pillWidth }}
-          className="relative flex h-11 cursor-pointer items-center overflow-hidden rounded-full bg-fg text-[14px] font-medium text-bg shadow-[0_1px_2px_rgb(0_0_0/0.12),0_10px_24px_-12px_rgb(0_0_0/0.45)]"
+          className="relative flex h-11 cursor-pointer items-center overflow-hidden rounded-full bg-[#f4f4f5] text-[14px] font-medium text-fg ring-1 ring-black/[0.06] transition-colors duration-200 hover:bg-[#ededee]"
         >
           {/* sheen that sweeps across on hover */}
           <motion.span
             aria-hidden
-            className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+            className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/90 to-transparent"
             variants={{ rest: { x: "0%" }, hover: { x: "500%", transition: { duration: 0.8, ease: "easeInOut" } } }}
           />
 
@@ -78,7 +78,7 @@ export function CopyEmail({ email }: { email: string }) {
                 {copied ? (
                   <motion.span
                     key="check"
-                    className="absolute inset-0 grid place-items-center text-[#9be37a]"
+                    className="absolute inset-0 grid place-items-center text-[#16a34a]"
                     initial={{ scale: 0.4, opacity: 0, rotate: -45 }}
                     animate={{ scale: 1, opacity: 1, rotate: 0 }}
                     exit={{ scale: 0.4, opacity: 0, transition: { duration: 0.15 } }}
@@ -89,7 +89,7 @@ export function CopyEmail({ email }: { email: string }) {
                 ) : (
                   <motion.span
                     key="mail"
-                    className="absolute inset-0 grid place-items-center"
+                    className="absolute inset-0 grid place-items-center text-muted"
                     initial={{ scale: 0.4, opacity: 0, rotate: 45 }}
                     animate={{ scale: 1, opacity: 1, rotate: 0 }}
                     exit={{ scale: 0.4, opacity: 0, y: -6, transition: { duration: 0.15 } }}
@@ -180,7 +180,7 @@ function Sparks({ show }: { show: boolean }) {
           <motion.span
             key={i}
             className="absolute -mt-[2px] -ml-[2px] size-[4px] rounded-full"
-            style={{ background: i % 3 === 0 ? "var(--accent)" : i % 3 === 1 ? "#9be37a" : "#f4c542" }}
+            style={{ background: i % 3 === 0 ? "var(--accent)" : i % 3 === 1 ? "#16a34a" : "#f4c542" }}
             initial={{ x: 0, y: 0, scale: 0, opacity: 1 }}
             animate={{ x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, scale: [0, 1.4, 0], opacity: [1, 1, 0] }}
             transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}

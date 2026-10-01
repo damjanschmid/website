@@ -138,8 +138,7 @@ export function AvatarSpinner({ src, alt = "", initials = "DS" }: { src?: string
                 alt={alt}
                 draggable={false}
                 onError={() => setBroken(true)}
-                // the photo is head and shoulders, so zoom in on the face
-                className="size-full origin-[48%_36%] scale-[1.55] object-cover"
+                className="size-full object-cover"
               />
             ) : (
               <Placeholder initials={initials} />
