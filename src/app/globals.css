@@ -23,6 +23,8 @@
 }
 
 html {
+  /* the pull-up at the bottom replaces the browser's own bounce */
+  overscroll-behavior-y: none;
   background: var(--bg);
   color: var(--fg);
   -webkit-font-smoothing: antialiased;
