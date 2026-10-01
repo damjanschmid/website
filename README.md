@@ -18,7 +18,7 @@ Then open http://localhost:3000.
 - **Email, location, name**: `src/lib/site.ts`.
 - **Profile picture**: put a photo in `public/` and pass it to the avatar, e.g. `<AvatarSpinner src="/me.jpg" alt="Damjan" />` in `src/app/page.tsx`.
 - **Version** (bottom right): comes from `version` in `package.json`.
-- **View-source signature**: `scripts/signature.txt`. After `next build`, `scripts/sign-html.mjs` puts it above `<!DOCTYPE html>` on every page, so it only shows in production builds.
+- **View-source signature**: `src/lib/signature.ts`. It renders in `<head>` inside a `<noscript>`, since React can't output a bare HTML comment.
 
 ## Stack
 

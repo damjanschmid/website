@@ -1,3 +1,5 @@
+// Shown at the top of the page source. Say hi to whoever opens view-source.
+export const signature = String.raw`
 <!-------------------------------------------------------
 
  ________  ________  _____ ______         ___  ________  ________
@@ -13,3 +15,4 @@ made by Damjan :)
 https://www.damjanschmid.ch/
 
 -------------------------------------------------------->
+`;
