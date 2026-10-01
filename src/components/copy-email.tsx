@@ -149,7 +149,7 @@ async function writeToClipboard(text: string) {
  * Letters fade up out of a soft blur. The whole stagger is squeezed
  * into a fixed window, so a long email takes as long as a short word.
  */
-const STAGGER = 0.14; // s, first letter to last
+const STAGGER = 0.24; // s, first letter to last
 const ease = [0.22, 1, 0.36, 1] as const;
 
 function RollingText({ text }: { text: string }) {
@@ -157,15 +157,15 @@ function RollingText({ text }: { text: string }) {
   return (
     <motion.span
       className="absolute inset-y-0 left-0 inline-flex"
-      exit={{ opacity: 0, filter: "blur(2px)", y: "-0.25em", transition: { duration: 0.12, ease: "easeIn" } }}
+      exit={{ opacity: 0, filter: "blur(3px)", y: "-0.4em", transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } }}
     >
       {chars.map((char, i) => (
         <motion.span
           key={i}
           className="inline-block whitespace-pre"
-          initial={{ opacity: 0, y: "0.3em", filter: "blur(4px)" }}
+          initial={{ opacity: 0, y: "0.55em", filter: "blur(5px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.32, ease, delay: 0.06 + (i / Math.max(chars.length - 1, 1)) * STAGGER }}
+          transition={{ duration: 0.5, ease, delay: 0.08 + (i / Math.max(chars.length - 1, 1)) * STAGGER }}
         >
           {char}
         </motion.span>
