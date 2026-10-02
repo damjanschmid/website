@@ -17,9 +17,9 @@
   --color-accent: var(--accent);
   --color-surface: var(--surface);
 
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Times New Roman", Times, "Nimbus Roman", serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-serif: "Times New Roman", Times, "Nimbus Roman", serif;
 }
 
 html {
