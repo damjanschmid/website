@@ -16,3 +16,13 @@ https://www.damjanschmid.ch/
 
 -------------------------------------------------------->
 `;
+
+// With scripting on, browsers parse <noscript> contents as raw text, so the
+// comment above never becomes a comment node. This lifts it into one and
+// places it as the first child of <html>, before <head>. The noscript stays
+// put so hydration still finds the element React rendered.
+export const signatureScript = String.raw`
+(function(){var n=document.getElementById("signature");if(!n)return;
+var t=n.textContent.replace(/^\s*<!--/,"").replace(/-->\s*$/,"");
+document.documentElement.insertBefore(document.createComment(t),document.head);})();
+`;
