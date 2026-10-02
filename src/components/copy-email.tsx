@@ -83,9 +83,10 @@ export function CopyEmail({ email }: { email: string }) {
                   <motion.span
                     key="plane"
                     className="absolute inset-0 grid place-items-center text-muted"
-                    initial={{ scale: 0.4, opacity: 0, rotate: 45 }}
-                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                    exit={{ scale: 0.4, opacity: 0, y: -6, transition: { duration: 0.15 } }}
+                    initial={{ scale: 0.4, opacity: 0, x: -6, y: 6 }}
+                    animate={{ scale: 1, opacity: 1, x: 0, y: 0 }}
+                    // flies off to the upper right once the email is copied
+                    exit={{ x: 14, y: -14, opacity: 0, transition: { duration: 0.25, ease: [0.4, 0, 1, 1] } }}
                     transition={spring}
                   >
                     <PlaneIcon size={18} />

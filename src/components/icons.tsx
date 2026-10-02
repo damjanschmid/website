@@ -29,17 +29,19 @@ function Svg({ size = 18, className, children }: IconProps & { children: React.R
   );
 }
 
-/* Paper plane that noses up and edges forward on hover, a little take-off */
+/* Folded paper plane that noses up and edges forward on hover, a little take-off */
 export function PlaneIcon(props: IconProps) {
   return (
     <motion.span
       className="grid"
-      variants={{ rest: { x: 0, y: 0, rotate: 0 }, hover: { x: 2, y: -2, rotate: -12 } }}
+      variants={{ rest: { x: 0, y: 0, rotate: 0 }, hover: { x: 2, y: -2, rotate: -10 } }}
       transition={{ type: "spring", stiffness: 500, damping: 18 }}
     >
       <Svg {...props}>
-        <path d="M22 2 11 13" />
-        <path d="M22 2 15 22 11 13 2 9z" />
+        {/* top wing */}
+        <path d="M22 4 2.5 8.5 9.5 13Z" strokeWidth={2} />
+        {/* body and the folded lower flap */}
+        <path d="M22 4 9.5 13 8 21 13.5 15Z" strokeWidth={2} />
       </Svg>
     </motion.span>
   );
