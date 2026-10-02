@@ -54,22 +54,12 @@ export function CopyEmail({ email }: { email: string }) {
         <motion.button
           type="button"
           onClick={copy}
-          initial="rest"
-          animate="rest"
-          whileHover="hover"
           whileTap={{ scale: 0.96 }}
           transition={spring}
           aria-label={copied ? "Email copied to clipboard" : `Copy email address ${email}`}
           style={{ width: pillWidth }}
           className="relative flex h-11 cursor-pointer items-center overflow-hidden rounded-full bg-[#f4f4f5] font-sans text-[14px] font-medium text-fg ring-1 ring-black/[0.06] transition-colors duration-200 hover:bg-[#ededee]"
         >
-          {/* sheen that sweeps across on hover */}
-          <motion.span
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/90 to-transparent"
-            variants={{ rest: { x: "0%" }, hover: { x: "500%", transition: { duration: 0.8, ease: "easeInOut" } } }}
-          />
-
           {/* natural-width content; the button animates to match it */}
           <span ref={measure} className="flex w-max shrink-0 items-center gap-2.5 pr-5 pl-4">
             {/* icons stack on top of each other and cross-fade */}

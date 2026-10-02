@@ -36,9 +36,10 @@ body {
   font-family: var(--font-serif);
 }
 
+/* like a marker on paper */
 ::selection {
-  background: var(--accent);
-  color: var(--bg);
+  background: #fff1a8;
+  color: var(--fg);
 }
 
 /* on touch screens the pull-up at the bottom replaces the browser's own bounce */

@@ -1,11 +1,8 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
+import { motion } from "motion/react";
 
-/*
- * Animated icons. They react to the "hover" variant of the closest
- * motion parent, e.g. <motion.button initial="rest" animate="rest" whileHover="hover">.
- */
+/* Icons for the copy-email button. */
 
 type IconProps = { size?: number; className?: string };
 
@@ -29,21 +26,12 @@ function Svg({ size = 18, className, children }: IconProps & { children: React.R
   );
 }
 
-/* Envelope whose flap lifts open on hover */
+/* A plain envelope */
 export function MailIcon(props: IconProps) {
-  const flap: Variants = {
-    rest: { d: "M3.5 7.5 L12 13.5 L20.5 7.5" },
-    hover: { d: "M3.5 7.5 L12 2.5 L20.5 7.5" },
-  };
-  const letter: Variants = {
-    rest: { y: 4, opacity: 0 },
-    hover: { y: -1.5, opacity: 1, transition: { delay: 0.08, type: "spring", stiffness: 400, damping: 20 } },
-  };
   return (
     <Svg {...props}>
-      <motion.rect x="7.5" y="6" width="9" height="7" rx="1" variants={letter} strokeWidth={1.4} />
       <rect x="3" y="6" width="18" height="13" rx="2.5" />
-      <motion.path variants={flap} transition={{ type: "spring", stiffness: 500, damping: 26 }} />
+      <path d="M3.5 7.5 L12 13.5 L20.5 7.5" />
     </Svg>
   );
 }
