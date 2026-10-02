@@ -4,13 +4,12 @@ Date: 2026-10-02
 
 ## Goal
 
-Replace the placeholder greetings on the homepage with lines Damjan would actually say, and set the whole page in Times New Roman.
+Replace the placeholder greetings on the homepage with lines Damjan would actually say, and set the headline and body text in Times New Roman. The footer stays in Geist Mono.
 
 ## Scope
 
 - `src/content/greetings.ts`: new greeting content. The selection logic (time of day, weekday, returning visitor, special days, shuffle on click) stays as is, with one addition: a new "waiting or working" pool.
-- `src/lib/fonts.ts` and `src/app/globals.css`: all three font tokens point at a local Times New Roman stack. Google font loading is removed.
-- `src/app/layout.tsx`: drop the font variable class names once the Google fonts are gone.
+- `src/lib/fonts.ts` and `src/app/globals.css`: the serif and sans font tokens point at a local Times New Roman stack. Geist and Instrument Serif are no longer loaded. Geist Mono stays for the footer.
 
 Nothing else on the page changes.
 
@@ -56,14 +55,14 @@ Valentine's Day is removed.
 
 ## Font
 
-All three Tailwind font tokens (`--font-sans`, `--font-mono`, `--font-serif`) resolve to the same stack:
+The serif and sans Tailwind font tokens (`--font-serif`, `--font-sans`) resolve to the same local stack:
 
 ```
 "Times New Roman", Times, "Nimbus Roman", serif
 ```
 
-The `next/font/google` imports (Geist, Geist Mono, Instrument Serif) are deleted, so the page downloads no web fonts. Times New Roman is native on macOS, Windows and iOS. Android and most Linux systems fall back to their default serif, which is accepted. The existing class names (`font-serif`, `font-sans`, `font-mono`) stay in the components so no markup changes.
+`--font-mono` keeps Geist Mono, loaded through `next/font/google` as today. The Geist and Instrument Serif imports are deleted, so only one web font is downloaded. Times New Roman is native on macOS, Windows and iOS. Android and most Linux systems fall back to their default serif, which is accepted. The existing class names (`font-serif`, `font-sans`, `font-mono`) stay in the components so no markup changes.
 
 ## Testing
 
-Manual check in the dev server: headline, body and footer render in Times New Roman, the greeting shuffles on click, tooltips show for the lines that have one, and there are no console errors or font requests in the network panel. `pnpm lint` and `pnpm build` pass.
+Manual check in the dev server: headline and body render in Times New Roman and the footer in Geist Mono, the greeting shuffles on click, tooltips show for the lines that have one, and there are no console errors and only the Geist Mono font request in the network panel. `pnpm lint` and `pnpm build` pass.
