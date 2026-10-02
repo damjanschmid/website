@@ -2,25 +2,26 @@
 
 import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import { MAX, PullTracker, THRESHOLD, rubber, unrubber } from "@/lib/pull-tracker";
 
 /*
- * Keep swiping past the bottom and the page lifts like a rubber band,
- * revealing a sheet underneath. Pull far enough and it arms ("Let go"),
- * then everything snaps back down when you release.
+ * Keep swiping past the bottom and the page lifts, revealing a sheet
+ * underneath. The first stretch tracks your fingers 1:1, then it gets heavy
+ * like a rubber band. Pull far enough and it arms ("Let go"), then everything
+ * springs back down when the last finger leaves, carrying your velocity.
+ *
+ * Any number of fingers can take part: the gesture is tracked incrementally
+ * (see pull-tracker.ts), so a second finger can take over from the first.
  *
  * Touch only: on desktop the page behaves normally. The sheet's content
  * is a placeholder for now.
  */
 
-const MAX = 280; // px the page can lift at most
-const THRESHOLD = 150; // px of lift before it arms
-
-// rubber band: easy at first, harder the further you pull
-const rubber = (raw: number) => MAX * (1 - Math.exp(-raw / MAX));
+const MAX_VELOCITY = 1500; // px/s, so a hard flick overshoots a little rather than launching the page
 
 export function PullUp({ children }: { children: React.ReactNode }) {
   const pull = useMotionValue(0);
-  const raw = useRef(0);
+  const tracker = useRef(new PullTracker());
   const [armed, setArmed] = useState(false);
   const armedRef = useRef(false);
 
@@ -30,15 +31,11 @@ export function PullUp({ children }: { children: React.ReactNode }) {
   const handleWidth = useTransform(pull, [0, THRESHOLD, MAX], [28, 44, 52]);
 
   useEffect(() => {
-    let touchStart: number | null = null;
+    const t = tracker.current;
 
     const atBottom = () => window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
 
-    const setPull = (r: number) => {
-      raw.current = Math.max(0, r);
-      pull.stop();
-      const p = rubber(raw.current);
-      pull.set(p);
+    const setArmedState = (p: number) => {
       const isArmed = p >= THRESHOLD;
       if (isArmed !== armedRef.current) {
         armedRef.current = isArmed;
@@ -47,31 +44,49 @@ export function PullUp({ children }: { children: React.ReactNode }) {
       }
     };
 
-    const release = () => {
+    const release = (now: number) => {
       const wasArmed = armedRef.current;
-      raw.current = 0;
       armedRef.current = false;
       setArmed(false);
-      // a little bounce if you pulled all the way
-      animate(pull, 0, { type: "spring", stiffness: 380, damping: wasArmed ? 22 : 34 });
+      // the fingers' speed, converted from raw travel to page lift, carries into the spring
+      const slope = rubber(t.raw + 1) - rubber(t.raw);
+      const velocity = Math.max(-MAX_VELOCITY, Math.min(MAX_VELOCITY, t.velocity(now) * slope));
+      t.reset();
+      animate(pull, 0, { type: "spring", stiffness: 380, damping: wasArmed ? 22 : 34, velocity });
     };
 
     const onTouchStart = (e: TouchEvent) => {
-      // spinning the avatar or tapping the button shouldn't lift the page
-      const onControl = (e.target as Element | null)?.closest("button, a");
-      touchStart = atBottom() && !onControl ? e.touches[0].clientY : null;
+      for (const touch of Array.from(e.changedTouches)) {
+        // spinning the avatar or tapping the button shouldn't lift the page
+        if ((touch.target as Element | null)?.closest("button, a")) continue;
+        if (!t.active) {
+          if (!atBottom()) continue;
+          // catch the page wherever it is, even mid-bounce
+          pull.stop();
+          t.reset(unrubber(pull.get()));
+        }
+        t.down(touch.identifier, touch.clientY, e.timeStamp);
+      }
     };
     const onTouchMove = (e: TouchEvent) => {
-      if (touchStart === null) return;
-      const dy = touchStart - e.touches[0].clientY; // finger moving up
-      if (dy <= 0 && raw.current === 0) return;
+      if (!t.active) return;
+      const before = t.raw;
+      const raw = t.move(
+        Array.from(e.changedTouches).map((touch) => ({ id: touch.identifier, y: touch.clientY })),
+        e.timeStamp,
+      );
+      // not pulling and moving the other way: leave it to the browser
+      if (raw === 0 && raw <= before) return;
       e.preventDefault();
-      setPull(dy);
+      const p = rubber(raw);
+      pull.set(p);
+      setArmedState(p);
     };
-    const onTouchEnd = () => {
-      if (touchStart === null) return;
-      touchStart = null;
-      release();
+    const onTouchEnd = (e: TouchEvent) => {
+      if (!t.active) return;
+      let last = false;
+      for (const touch of Array.from(e.changedTouches)) last = t.up(touch.identifier) || last;
+      if (last) release(e.timeStamp);
     };
 
     window.addEventListener("touchstart", onTouchStart, { passive: true });
@@ -95,7 +110,7 @@ export function PullUp({ children }: { children: React.ReactNode }) {
       {/* the sheet that hides below the page */}
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-0 flex h-[300px] justify-center bg-[#f5f5f6] px-4 shadow-[inset_0_12px_18px_-14px_rgb(0_0_0/0.18)]"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-0 flex h-[360px] justify-center bg-[#f5f5f6] px-4 shadow-[inset_0_12px_18px_-14px_rgb(0_0_0/0.18)]"
         style={{ y: sheetY }}
       >
         <div className="flex w-full max-w-[520px] flex-col items-center pt-4">
