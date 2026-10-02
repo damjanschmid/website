@@ -3,7 +3,7 @@
  * time of day, weekday, special dates and whether you've been here before.
  * Clicking the greeting shuffles to another one.
  *
- * These are placeholders, write your own. `note` is shown as a tooltip.
+ * `note` is shown as a tooltip.
  */
 
 export type Greeting = { text: string; note?: string };
@@ -11,63 +11,82 @@ export type Greeting = { text: string; note?: string };
 type Context = { now: Date; visits: number };
 
 const morning: Greeting[] = [
-  { text: "Good morning" },
-  { text: "Morning, early bird" },
-  { text: "Coffee first?" },
-  { text: "Rise and shine" },
+  { text: "Early bird" },
+  { text: "Morning" },
+  { text: "Guete Morge", note: "Swiss German for good morning" },
+  { text: "Buongiorno", note: "Italian, one of the four Swiss languages" },
+  { text: "Coffee first" },
+  { text: "Already at it?" },
+  { text: "Ah, you're finally awake", note: "Skyrim, every single time" },
 ];
 
 const afternoon: Greeting[] = [
-  { text: "Good afternoon" },
-  { text: "Afternoon, friend" },
-  { text: "Post-lunch slump?" },
+  { text: "Hoi", note: "Swiss German for hi" },
+  { text: "Buongiorno", note: "Italian, one of the four Swiss languages" },
+  { text: "Lunch break?" },
+  { text: "En Guete", note: "Swiss German for enjoy your meal" },
+  { text: "Taking a break?" },
+  { text: "Procrastinating?" },
+  { text: "Still at it?" },
 ];
 
 const evening: Greeting[] = [
-  { text: "Good evening" },
-  { text: "Evening, you" },
-  { text: "Long day?" },
+  { text: "Evening" },
+  { text: "Guete Abig", note: "Swiss German for good evening" },
+  { text: "Bonsoir", note: "French, one of the four Swiss languages" },
+  { text: "Buonasera", note: "Italian for good evening" },
+  { text: "Feierabend?", note: "German for \"done with work for today?\"" },
+  { text: "Done for the day?" },
 ];
 
 const lateNight: Greeting[] = [
+  { text: "Night owl" },
   { text: "Up late?" },
-  { text: "Hello, night owl" },
-  { text: "Can't sleep either?" },
-  { text: "Shouldn't you be asleep?" },
+  { text: "Still awake?" },
+  { text: "Can't sleep?" },
+  { text: "Go to bed" },
 ];
 
 const anytime: Greeting[] = [
-  { text: "Hey there" },
-  { text: "Oh, hello" },
-  { text: "Hi, come on in" },
-  { text: "Nice to see you" },
+  { text: "Salut", note: "French, the casual one" },
+  { text: "Hoi", note: "Swiss German for hi" },
   { text: "Grüezi", note: "Swiss German for hello" },
-  { text: "Hoi zäme", note: "Swiss German for hi everyone" },
-  { text: "Salü", note: "Swiss German, the casual one" },
-  { text: "Bonjour", note: "Hello in French, one of four Swiss languages" },
-  { text: "Ciao", note: "Italian, another one of the four" },
+  { text: "Hallo" },
+  { text: "Hey" },
+  { text: "Ciao", note: "Italian, one of the four Swiss languages" },
+  { text: "Bonjour", note: "French, one of the four Swiss languages" },
   { text: "Allegra", note: "Hello in Romansh, the smallest Swiss language" },
+  { text: "Hello there", note: "General Kenobi" },
+];
+
+// for whoever is on a break or waiting on something
+const working: Greeting[] = [
+  { text: "Waiting for a build?" },
+  { text: "Meeting running late?" },
+  { text: "Between things?" },
+  { text: "Killing time?" },
+  { text: "Stuck on something?" },
+  { text: "Quick break?" },
+  { text: "Locked in?" },
 ];
 
 const weekday: Record<number, Greeting[]> = {
-  1: [{ text: "Monday again, huh" }],
-  3: [{ text: "Halfway there" }],
-  5: [{ text: "Happy Friday" }, { text: "Friday feeling?" }],
-  6: [{ text: "Slow Saturday?" }],
-  0: [{ text: "Sunday, slowly" }],
+  1: [{ text: "Monday, huh" }, { text: "New week" }],
+  5: [{ text: "Almost weekend" }, { text: "Friday" }],
+  6: [{ text: "Weekend" }, { text: "No work today, right?" }],
+  0: [{ text: "Sunday" }, { text: "Slow one today" }],
 };
 
 const returning: Greeting[] = [
   { text: "Welcome back" },
-  { text: "Oh, you again. Nice." },
-  { text: "Back for more?" },
-  { text: "Good to see you again" },
+  { text: "You again" },
+  { text: "Back already?" },
+  { text: "Still here?" },
 ];
 
 // month is 1-based here
 const specialDays: { month: number; day: number; greeting: Greeting }[] = [
   { month: 1, day: 1, greeting: { text: "Happy new year" } },
-  { month: 2, day: 14, greeting: { text: "Happy Valentine's" } },
   { month: 8, day: 1, greeting: { text: "Happy 1. August", note: "Swiss National Day" } },
   { month: 10, day: 31, greeting: { text: "Boo" } },
   { month: 12, day: 24, greeting: { text: "Merry Christmas" } },
@@ -88,6 +107,7 @@ export function candidates({ now, visits }: Context): Greeting[] {
     ...timeOfDay(now.getHours()),
     ...timeOfDay(now.getHours()), // time of day gets double weight
     ...anytime,
+    ...working,
     ...(weekday[now.getDay()] ?? []),
     ...(visits > 1 ? returning : []),
   ];
