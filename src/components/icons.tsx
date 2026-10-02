@@ -38,10 +38,10 @@ export function PlaneIcon(props: IconProps) {
       transition={{ type: "spring", stiffness: 500, damping: 18 }}
     >
       <Svg {...props}>
-        {/* top wing */}
-        <path d="M22 4 2.5 8.5 9.5 13Z" strokeWidth={2} />
-        {/* body and the folded lower flap */}
-        <path d="M22 4 9.5 13 8 21 13.5 15Z" strokeWidth={2} />
+        {/* outline: nose, wing tip, back junction, tail, fold, bottom tip */}
+        <path d="M19.8 2.2 L2.2 9.2 L7 14.6 L7 19.8 L10.2 17 L14.8 21.6 Z" strokeWidth={2} />
+        {/* crease from the nose to the back */}
+        <path d="M19.8 2.2 L7 14.6" strokeWidth={2} />
       </Svg>
     </motion.span>
   );
