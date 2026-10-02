@@ -2,13 +2,13 @@
 
 import { AnimatePresence, motion, useSpring, useTransform } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckIcon, MailIcon } from "@/components/icons";
+import { CheckIcon, PlaneIcon } from "@/components/icons";
 
 const spring = { type: "spring", stiffness: 420, damping: 32 } as const;
 
 /*
  * Shows my email. Click it and it copies to the clipboard:
- * the envelope turns into a check, the text rolls over and
+ * the paper plane turns into a check, the text rolls over and
  * a few sparks fly. Falls back to mailto: if copying fails.
  */
 export function CopyEmail({ email }: { email: string }) {
@@ -81,14 +81,14 @@ export function CopyEmail({ email }: { email: string }) {
                   </motion.span>
                 ) : (
                   <motion.span
-                    key="mail"
+                    key="plane"
                     className="absolute inset-0 grid place-items-center text-muted"
                     initial={{ scale: 0.4, opacity: 0, rotate: 45 }}
                     animate={{ scale: 1, opacity: 1, rotate: 0 }}
                     exit={{ scale: 0.4, opacity: 0, y: -6, transition: { duration: 0.15 } }}
                     transition={spring}
                   >
-                    <MailIcon size={18} />
+                    <PlaneIcon size={18} />
                   </motion.span>
                 )}
               </AnimatePresence>

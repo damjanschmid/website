@@ -29,17 +29,17 @@ function Svg({ size = 18, className, children }: IconProps & { children: React.R
   );
 }
 
-/* Envelope that lifts and tilts a little on hover, like it's being picked up */
-export function MailIcon(props: IconProps) {
+/* Paper plane that noses up and edges forward on hover, a little take-off */
+export function PlaneIcon(props: IconProps) {
   return (
     <motion.span
       className="grid"
-      variants={{ rest: { y: 0, rotate: 0 }, hover: { y: -2, rotate: -10 } }}
+      variants={{ rest: { x: 0, y: 0, rotate: 0 }, hover: { x: 2, y: -2, rotate: -12 } }}
       transition={{ type: "spring", stiffness: 500, damping: 18 }}
     >
       <Svg {...props}>
-        <rect x="3" y="6" width="18" height="13" rx="2.5" />
-        <path d="M3.5 7.5 L12 13.5 L20.5 7.5" />
+        <path d="M22 2 11 13" />
+        <path d="M22 2 15 22 11 13 2 9z" />
       </Svg>
     </motion.span>
   );
