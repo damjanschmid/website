@@ -2,7 +2,10 @@
 
 import { motion } from "motion/react";
 
-/* Icons for the copy-email button. */
+/*
+ * Icons for the copy-email button. They react to the "hover" variant of the
+ * closest motion parent, e.g. <motion.button initial="rest" animate="rest" whileHover="hover">.
+ */
 
 type IconProps = { size?: number; className?: string };
 
@@ -26,13 +29,19 @@ function Svg({ size = 18, className, children }: IconProps & { children: React.R
   );
 }
 
-/* A plain envelope */
+/* Envelope that lifts and tilts a little on hover, like it's being picked up */
 export function MailIcon(props: IconProps) {
   return (
-    <Svg {...props}>
-      <rect x="3" y="6" width="18" height="13" rx="2.5" />
-      <path d="M3.5 7.5 L12 13.5 L20.5 7.5" />
-    </Svg>
+    <motion.span
+      className="grid"
+      variants={{ rest: { y: 0, rotate: 0 }, hover: { y: -2, rotate: -10 } }}
+      transition={{ type: "spring", stiffness: 500, damping: 18 }}
+    >
+      <Svg {...props}>
+        <rect x="3" y="6" width="18" height="13" rx="2.5" />
+        <path d="M3.5 7.5 L12 13.5 L20.5 7.5" />
+      </Svg>
+    </motion.span>
   );
 }
 

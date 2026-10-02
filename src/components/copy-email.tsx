@@ -54,6 +54,9 @@ export function CopyEmail({ email }: { email: string }) {
         <motion.button
           type="button"
           onClick={copy}
+          initial="rest"
+          animate="rest"
+          whileHover="hover"
           whileTap={{ scale: 0.96 }}
           transition={spring}
           aria-label={copied ? "Email copied to clipboard" : `Copy email address ${email}`}
