@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "motion/react";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { MAX, PullTracker, THRESHOLD, rubber, unrubber } from "@/lib/pull-tracker";
 
@@ -13,8 +14,7 @@ import { MAX, PullTracker, THRESHOLD, rubber, unrubber } from "@/lib/pull-tracke
  * Any number of fingers can take part: the gesture is tracked incrementally
  * (see pull-tracker.ts), so a second finger can take over from the first.
  *
- * Touch only: on desktop the page behaves normally. The sheet's content
- * is a placeholder for now.
+ * Touch only: on desktop the page behaves normally.
  */
 
 const MAX_VELOCITY = 1500; // px/s, so a hard flick overshoots a little rather than launching the page
@@ -132,13 +132,21 @@ export function PullUp({ children }: { children: React.ReactNode }) {
             </AnimatePresence>
           </div>
 
-          {/* placeholder for whatever lives down here */}
+          {/* cats around the campfire: the reward for pulling */}
           <motion.div
-            className="mt-5 grid h-[150px] w-full place-items-center rounded-3xl border border-dashed border-black/15 bg-black/[0.02] font-mono text-[12px] text-muted"
-            animate={{ scale: armed ? 1 : 0.96, opacity: armed ? 1 : 0.7 }}
+            className="mt-6 w-full"
+            animate={{ scale: armed ? 1 : 0.94, opacity: armed ? 1 : 0.6, y: armed ? 0 : 6 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
           >
-            placeholder · something lives down here
+            <Image
+              src="/campfire.gif"
+              alt="Cats around a campfire"
+              width={498}
+              height={131}
+              unoptimized
+              loading="eager"
+              className="h-auto w-full"
+            />
           </motion.div>
         </div>
       </motion.div>
