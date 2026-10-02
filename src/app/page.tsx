@@ -26,13 +26,22 @@ export default function Home() {
             <Greeting />
           </div>
 
-          {/* Placeholder bio. Rewrite this in your own words. */}
           <Reveal delay={0.35} className="mt-6 max-w-[34rem] space-y-4 text-[17px] leading-[1.6] text-fg/75">
             <p>
-              I&apos;m {site.firstName}. I like making things that feel good to use, and I collect a lot along the way:
-              links, books, songs, photos, half-finished ideas.
+              I&apos;m {site.firstName}. Currently a product designer @{" "}
+              <a
+                href="https://quinn.now"
+                target="_blank"
+                rel="noreferrer"
+                className="underline underline-offset-[3px] decoration-1 transition-colors hover:text-[#3e43ff]"
+              >
+                quinn
+              </a>{" "}
+              where we change how people get employed.
             </p>
-            <p>Based in {site.location}. Always up for a good conversation.</p>
+            <p>
+              Weekend pizzaiolo, ambitious volleyball player, full-time life enjoyer. Based in Zurich, Switzerland.
+            </p>
           </Reveal>
 
           <Reveal delay={0.5} className="mt-9">
