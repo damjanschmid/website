@@ -4,8 +4,16 @@ import { Greeting } from "@/components/greeting";
 import { LocalTime } from "@/components/local-time";
 import { PullUp } from "@/components/pull-up";
 import { Reveal } from "@/components/reveal";
+import { deployLink } from "@/lib/deploy";
 import { site } from "@/lib/site";
-import pkg from "../../package.json";
+
+const deploy = deployLink(site.repo, process.env.BUILD_COMMIT_MESSAGE, process.env.BUILD_COMMIT_SHA);
+const deployedOn = new Date(process.env.BUILD_TIME ?? Date.now()).toLocaleDateString("en-GB", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
+  timeZone: site.timeZone,
+});
 
 export default function Home() {
   return (
@@ -38,13 +46,13 @@ export default function Home() {
           </Reveal>
           <Reveal y={6} delay={0.8}>
             <a
-              href={site.repo}
+              href={deploy.href}
               target="_blank"
               rel="noreferrer"
               className="link-draw transition-colors hover:text-fg"
-              title="Source on GitHub"
+              title={`Deployed ${deployedOn}`}
             >
-              v{pkg.version}
+              {deploy.label}
             </a>
           </Reveal>
         </footer>
