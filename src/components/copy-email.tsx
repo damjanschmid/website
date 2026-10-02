@@ -1,38 +1,26 @@
 "use client";
 
-import { AnimatePresence, motion, useSpring, useTransform } from "motion/react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { CheckIcon, PlaneIcon } from "@/components/icons";
 
 const spring = { type: "spring", stiffness: 420, damping: 32 } as const;
+const bouncy = { type: "spring", stiffness: 500, damping: 18 } as const;
+
+const CALLOUT_MS = 1500; // how long the bubble stays
+const COPIED_MS = 2000; // how long the check stays
 
 /*
- * Shows my email. Click it and it copies to the clipboard:
- * the paper plane turns into a check, the text rolls over and
- * a few sparks fly. Falls back to mailto: if copying fails.
+ * Shows my email. Click it and it copies to the clipboard: the pill holds
+ * still, the paper plane pops into a check and a small bubble above says
+ * "Copied" for a moment. Falls back to mailto: if copying fails.
  */
 export function CopyEmail({ email }: { email: string }) {
   const [copied, setCopied] = useState(false);
-  const [burst, setBurst] = useState(0);
-  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  const width = useSpring(0, spring);
-  const pillWidth = useTransform(width, (w) => (w === 0 ? "auto" : w));
-  const observer = useRef<ResizeObserver | null>(null);
+  const [callout, setCallout] = useState(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
-  useEffect(() => () => clearTimeout(timer.current), []);
-
-  // watch the content's natural width so the pill can spring to it
-  const measure = useCallback((el: HTMLSpanElement | null) => {
-    observer.current?.disconnect();
-    if (!el) return;
-    observer.current = new ResizeObserver(([entry]) => {
-      const w = entry.borderBoxSize[0].inlineSize;
-      // first measurement snaps, later ones spring
-      if (width.get() === 0) width.jump(w);
-      else width.set(w);
-    });
-    observer.current.observe(el);
-  }, [width]);
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   async function copy() {
     const ok = await writeToClipboard(email);
@@ -40,13 +28,14 @@ export function CopyEmail({ email }: { email: string }) {
       window.location.href = `mailto:${email}`;
       return;
     }
+    timers.current.forEach(clearTimeout);
     setCopied(true);
-    setBurst((b) => b + 1);
-    clearTimeout(timer.current);
-    timer.current = setTimeout(() => setCopied(false), 2200);
+    setCallout(true);
+    timers.current = [
+      setTimeout(() => setCallout(false), CALLOUT_MS),
+      setTimeout(() => setCopied(false), COPIED_MS),
+    ];
   }
-
-  const label = copied ? "Copied to clipboard" : email;
 
   return (
     <div className="flex">
@@ -57,65 +46,62 @@ export function CopyEmail({ email }: { email: string }) {
           initial="rest"
           animate="rest"
           whileHover="hover"
-          whileTap={{ scale: 0.96 }}
+          whileTap={{ scale: 0.965 }}
           transition={spring}
           aria-label={copied ? "Email copied to clipboard" : `Copy email address ${email}`}
-          style={{ width: pillWidth }}
-          className="relative flex h-11 cursor-pointer items-center overflow-hidden rounded-full bg-[#f4f4f5] font-sans text-[14px] font-medium text-fg ring-1 ring-black/[0.06] transition-colors duration-200 hover:bg-[#ededee]"
+          className="flex h-11 cursor-pointer items-center gap-2.5 rounded-full bg-[#f4f4f5] pr-[17px] pl-3.5 font-sans text-[14px] font-medium tracking-[-0.004em] text-muted ring-1 ring-black/[0.06] transition-colors duration-200 hover:bg-[#ededee]"
         >
-          {/* natural-width content; the button animates to match it */}
-          <span ref={measure} className="flex w-max shrink-0 items-center gap-2.5 pr-5 pl-4">
-            {/* icons stack on top of each other and cross-fade */}
-            <span className="relative size-[18px] shrink-0">
-              <AnimatePresence initial={false}>
-                {copied ? (
-                  <motion.span
-                    key="check"
-                    className="absolute inset-0 grid place-items-center text-[#16a34a]"
-                    initial={{ scale: 0.4, opacity: 0, rotate: -45 }}
-                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                    exit={{ scale: 0.4, opacity: 0, transition: { duration: 0.15 } }}
-                    transition={spring}
-                  >
-                    <CheckIcon size={18} />
-                  </motion.span>
-                ) : (
-                  <motion.span
-                    key="plane"
-                    className="absolute inset-0 grid place-items-center text-muted"
-                    initial={{ scale: 0.4, opacity: 0, x: -6, y: 6 }}
-                    animate={{ scale: 1, opacity: 1, x: 0, y: 0 }}
-                    // flies off to the upper right once the email is copied
-                    exit={{ x: 14, y: -14, opacity: 0, transition: { duration: 0.25, ease: [0.4, 0, 1, 1] } }}
-                    transition={spring}
-                  >
-                    <PlaneIcon size={18} />
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </span>
-
-            {/*
-              An invisible copy of the current label sets the width right away.
-              The visible labels sit on top of it, so the outgoing one can roll
-              away without pushing anything around.
-            */}
-            <span className="relative whitespace-nowrap">
-              <span aria-hidden className="invisible">
-                {label}
-              </span>
-              <AnimatePresence initial={false}>
-                <RollingText key={label} text={label} />
-              </AnimatePresence>
-            </span>
+          {/* icons stack on top of each other; the plane shrinks away, the check pops in */}
+          <span className="relative size-[18px] shrink-0">
+            <AnimatePresence initial={false}>
+              {copied ? (
+                <motion.span
+                  key="check"
+                  className="absolute inset-0 grid place-items-center text-[#1f9d55]"
+                  initial={{ scale: 0.4, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.4, opacity: 0, transition: { duration: 0.15 } }}
+                  transition={bouncy}
+                >
+                  <CheckIcon size={18} />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="plane"
+                  className="absolute inset-0 grid place-items-center text-muted"
+                  initial={{ scale: 0.4, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.4, opacity: 0, transition: { duration: 0.15 } }}
+                  transition={bouncy}
+                >
+                  <PlaneIcon size={18} />
+                </motion.span>
+              )}
+            </AnimatePresence>
           </span>
+          <span className="whitespace-nowrap">{email}</span>
         </motion.button>
-        {/* outside the button so they aren't clipped */}
-        <span className="pointer-events-none absolute top-1/2 left-[25px]">
-          <Sparks key={burst} show={burst > 0} />
-        </span>
-      </span>
 
+        {/* the bubble, centred above the pill */}
+        <AnimatePresence>
+          {callout && (
+            <motion.span
+              role="status"
+              className="pointer-events-none absolute bottom-full left-1/2 mb-[9px] rounded-lg bg-fg px-2.5 pt-[7px] pb-2 font-sans text-[12px] leading-none font-medium tracking-[0.005em] text-bg"
+              initial={{ opacity: 0, y: 6, scale: 0.9, x: "-50%" }}
+              animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
+              exit={{ opacity: 0, y: 4, scale: 0.95, x: "-50%", transition: { duration: 0.18, ease: [0.4, 0, 1, 1] } }}
+              transition={bouncy}
+            >
+              Copied
+              <span
+                aria-hidden
+                className="absolute top-full left-1/2 size-2 -translate-x-1/2 -translate-y-[5px] rotate-45 rounded-[1.5px] bg-fg"
+              />
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </span>
     </div>
   );
 }
@@ -137,57 +123,4 @@ async function writeToClipboard(text: string) {
     el.remove();
     return ok;
   }
-}
-
-/*
- * Letters fade up out of a soft blur. The whole stagger is squeezed
- * into a fixed window, so a long email takes as long as a short word.
- */
-const STAGGER = 0.24; // s, first letter to last
-const ease = [0.22, 1, 0.36, 1] as const;
-
-function RollingText({ text }: { text: string }) {
-  const chars = text.split("");
-  return (
-    <motion.span
-      className="absolute inset-y-0 left-0 inline-flex"
-      exit={{ opacity: 0, filter: "blur(3px)", y: "-0.4em", transition: { duration: 0.2, ease: [0.4, 0, 1, 1] } }}
-    >
-      {chars.map((char, i) => (
-        <motion.span
-          key={i}
-          className="inline-block whitespace-pre"
-          initial={{ opacity: 0, y: "0.55em", filter: "blur(5px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          transition={{ duration: 0.5, ease, delay: 0.08 + (i / Math.max(chars.length - 1, 1)) * STAGGER }}
-        >
-          {char}
-        </motion.span>
-      ))}
-    </motion.span>
-  );
-}
-
-/* A little burst of sparks from the icon */
-function Sparks({ show }: { show: boolean }) {
-  if (!show) return null;
-  const n = 9;
-  return (
-    <span aria-hidden className="absolute">
-      {Array.from({ length: n }, (_, i) => {
-        const angle = (i / n) * Math.PI * 2 + 0.3;
-        const dist = 22 + (i % 3) * 7;
-        return (
-          <motion.span
-            key={i}
-            className="absolute -mt-[2px] -ml-[2px] size-[4px] rounded-full"
-            style={{ background: i % 3 === 0 ? "var(--accent)" : i % 3 === 1 ? "#16a34a" : "#f4c542" }}
-            initial={{ x: 0, y: 0, scale: 0, opacity: 1 }}
-            animate={{ x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, scale: [0, 1.4, 0], opacity: [1, 1, 0] }}
-            transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          />
-        );
-      })}
-    </span>
-  );
 }

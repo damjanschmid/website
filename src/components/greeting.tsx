@@ -70,7 +70,8 @@ function Letters({ text }: { text: string }) {
               return (
                 <motion.span
                   key={i}
-                  className="inline-block"
+                  // the blur filter clips paint to the box; pad it so descenders survive at line-height 1
+                  className="inline-block -my-[0.25em] py-[0.25em]"
                   initial={{ opacity: 0, y: "0.35em", filter: "blur(10px)", rotate: 6 }}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)", rotate: 0 }}
                   transition={{ type: "spring", stiffness: 260, damping: 22, delay: 0.05 + i * 0.026 }}
