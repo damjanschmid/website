@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, animate, motion, useMotionValue, useTransform } from "motion/react";
+import { animate, motion, useMotionValue, useTransform } from "motion/react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { MAX, PullTracker, THRESHOLD, rubber, unrubber } from "@/lib/pull-tracker";
@@ -27,7 +27,6 @@ export function PullUp({ children }: { children: React.ReactNode }) {
 
   const pageY = useTransform(pull, (p) => -p);
   const sheetY = useTransform(pull, (p) => `calc(100% - ${p}px)`);
-  const progress = useTransform(pull, [0, THRESHOLD], [0, 1], { clamp: true });
   const handleWidth = useTransform(pull, [0, THRESHOLD, MAX], [28, 44, 52]);
 
   useEffect(() => {
@@ -116,22 +115,6 @@ export function PullUp({ children }: { children: React.ReactNode }) {
         <div className="flex w-full max-w-[520px] flex-col items-center pt-4">
           <motion.span className="h-[5px] rounded-full bg-black/15" style={{ width: handleWidth }} />
 
-          <div className="mt-5 flex h-5 items-center gap-2 text-[13px] text-muted">
-            <ProgressRing progress={progress} armed={armed} />
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.span
-                key={armed ? "go" : "pull"}
-                initial={{ opacity: 0, y: 4, filter: "blur(3px)" }}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -4, filter: "blur(3px)" }}
-                transition={{ duration: 0.18 }}
-                className={armed ? "text-fg" : undefined}
-              >
-                {armed ? "Let go" : "Keep pulling"}
-              </motion.span>
-            </AnimatePresence>
-          </div>
-
           {/* cats around the campfire: the reward for pulling */}
           <motion.div
             className="mt-6 w-full"
@@ -151,29 +134,5 @@ export function PullUp({ children }: { children: React.ReactNode }) {
         </div>
       </motion.div>
     </>
-  );
-}
-
-function ProgressRing({ progress, armed }: { progress: ReturnType<typeof useMotionValue<number>>; armed: boolean }) {
-  return (
-    <motion.svg
-      width="16"
-      height="16"
-      viewBox="0 0 16 16"
-      animate={{ scale: armed ? [1, 1.35, 1] : 1 }}
-      transition={{ duration: 0.35 }}
-    >
-      <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" strokeOpacity="0.2" strokeWidth="1.6" />
-      <motion.circle
-        cx="8"
-        cy="8"
-        r="6"
-        fill="none"
-        stroke={armed ? "var(--fg)" : "currentColor"}
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        style={{ pathLength: progress, rotate: -90, originX: "50%", originY: "50%" }}
-      />
-    </motion.svg>
   );
 }
