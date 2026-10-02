@@ -17,7 +17,7 @@
   --color-accent: var(--accent);
   --color-surface: var(--surface);
 
-  --font-sans: "Times New Roman", Times, "Nimbus Roman", serif;
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
   --font-serif: "Times New Roman", Times, "Nimbus Roman", serif;
 }
@@ -33,7 +33,7 @@ html {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
 }
 
 ::selection {

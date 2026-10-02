@@ -61,7 +61,7 @@ export function CopyEmail({ email }: { email: string }) {
           transition={spring}
           aria-label={copied ? "Email copied to clipboard" : `Copy email address ${email}`}
           style={{ width: pillWidth }}
-          className="relative flex h-11 cursor-pointer items-center overflow-hidden rounded-full bg-[#f4f4f5] text-[14px] font-medium text-fg ring-1 ring-black/[0.06] transition-colors duration-200 hover:bg-[#ededee]"
+          className="relative flex h-11 cursor-pointer items-center overflow-hidden rounded-full bg-[#f4f4f5] font-sans text-[14px] font-medium text-fg ring-1 ring-black/[0.06] transition-colors duration-200 hover:bg-[#ededee]"
         >
           {/* sheen that sweeps across on hover */}
           <motion.span

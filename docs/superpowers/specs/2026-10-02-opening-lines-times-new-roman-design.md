@@ -9,7 +9,8 @@ Replace the placeholder greetings on the homepage with lines Damjan would actual
 ## Scope
 
 - `src/content/greetings.ts`: new greeting content. The selection logic (time of day, weekday, returning visitor, special days, shuffle on click) stays as is, with one addition: a new "waiting or working" pool.
-- `src/lib/fonts.ts` and `src/app/globals.css`: the serif and sans font tokens point at a local Times New Roman stack. Geist and Instrument Serif are no longer loaded. Geist Mono stays for the footer.
+- `src/lib/fonts.ts` and `src/app/globals.css`: the serif token points at a local Times New Roman stack and the body uses it; the sans token becomes the system sans. Geist and Instrument Serif are no longer loaded. Geist Mono stays for the footer.
+- `src/components/copy-email.tsx`: the button gets `font-sans`.
 
 Nothing else on the page changes.
 
@@ -55,13 +56,15 @@ Valentine's Day is removed.
 
 ## Font
 
-The serif and sans Tailwind font tokens (`--font-serif`, `--font-sans`) resolve to the same local stack:
+The `--font-serif` Tailwind token resolves to the local stack below, and `body` uses it, so headline and body text are Times New Roman:
 
 ```
 "Times New Roman", Times, "Nimbus Roman", serif
 ```
 
-`--font-mono` keeps Geist Mono, loaded through `next/font/google` as today. The Geist and Instrument Serif imports are deleted, so only one web font is downloaded. Times New Roman is native on macOS, Windows and iOS. Android and most Linux systems fall back to their default serif, which is accepted. The existing class names (`font-serif`, `font-sans`, `font-mono`) stay in the components so no markup changes.
+`--font-sans` is the system sans stack (`ui-sans-serif, system-ui, sans-serif`) and is used only by the copy-email button, which carries `font-sans`.
+
+`--font-mono` keeps Geist Mono, loaded through `next/font/google` as today. The Geist and Instrument Serif imports are deleted, so only one web font is downloaded. Times New Roman is native on macOS, Windows and iOS. Android and most Linux systems fall back to their default serif, which is accepted. The only markup change is the `font-sans` class on the copy-email button.
 
 ## Testing
 
