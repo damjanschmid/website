@@ -6,8 +6,8 @@ import { MAX, PullTracker, THRESHOLD, rubber, unrubber } from "@/lib/pull-tracke
 
 /*
  * Keep swiping past the bottom and the page lifts, revealing a sheet
- * underneath. The first stretch tracks your fingers 1:1, then it gets heavy
- * like a rubber band. Pull far enough and it arms ("Let go"), then everything
+ * underneath. It starts out following your fingers and gets steadily heavier
+ * the further you pull, but never stops moving. Pull far enough and it arms ("Let go"), then everything
  * springs back down when the last finger leaves, carrying your velocity.
  *
  * Any number of fingers can take part: the gesture is tracked incrementally
@@ -110,7 +110,7 @@ export function PullUp({ children }: { children: React.ReactNode }) {
       {/* the sheet that hides below the page */}
       <motion.div
         aria-hidden
-        className="pointer-events-none fixed inset-x-0 bottom-0 z-0 flex h-[360px] justify-center bg-[#f5f5f6] px-4 shadow-[inset_0_12px_18px_-14px_rgb(0_0_0/0.18)]"
+        className="pointer-events-none fixed inset-x-0 bottom-0 z-0 flex h-[440px] justify-center bg-[#f5f5f6] px-4 shadow-[inset_0_12px_18px_-14px_rgb(0_0_0/0.18)]"
         style={{ y: sheetY }}
       >
         <div className="flex w-full max-w-[520px] flex-col items-center pt-4">

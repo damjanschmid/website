@@ -7,23 +7,26 @@
  * way a native sheet behaves.
  */
 
-export const THRESHOLD = 150; // px of 1:1 travel before it arms and gets heavy
-export const MAX = 280; // px the page can lift at most
+export const THRESHOLD = 140; // px of lift before it arms
+export const MAX = 360; // px the page approaches but never quite reaches
 
-const TAIL = MAX - THRESHOLD;
 const VELOCITY_WINDOW = 100; // ms of samples that count toward the release velocity
 
-/** raw finger travel -> how far the page actually lifts */
+/*
+ * raw finger travel -> how far the page actually lifts
+ *
+ * Starts out 1:1 and gets harder with the square of the travel, like iOS's
+ * own overscroll. Unlike an exponential it never goes dead: every extra
+ * centimetre of pull still moves the page, just less and less.
+ */
 export function rubber(raw: number) {
-  if (raw <= THRESHOLD) return raw;
-  return THRESHOLD + TAIL * (1 - Math.exp(-(raw - THRESHOLD) / TAIL));
+  return (MAX * raw) / (raw + MAX);
 }
 
 /** inverse of rubber, so a pull can resume from wherever the page currently is */
 export function unrubber(p: number) {
-  if (p <= THRESHOLD) return p;
-  const frac = Math.min((p - THRESHOLD) / TAIL, 1 - 1e-6);
-  return THRESHOLD - TAIL * Math.log(1 - frac);
+  const clamped = Math.min(p, MAX - 1e-3);
+  return (MAX * clamped) / (MAX - clamped);
 }
 
 type Touch = { id: number; y: number };

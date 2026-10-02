@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MAX, PullTracker, THRESHOLD, rubber, unrubber } from "./pull-tracker";
+import { MAX, PullTracker, rubber, unrubber } from "./pull-tracker";
 
 describe("PullTracker", () => {
   it("accumulates upward movement from one finger", () => {
@@ -73,26 +73,27 @@ describe("PullTracker", () => {
 });
 
 describe("rubber", () => {
-  it("tracks 1:1 below the threshold", () => {
+  it("starts out 1:1", () => {
     expect(rubber(0)).toBe(0);
-    expect(rubber(THRESHOLD / 2)).toBe(THRESHOLD / 2);
-    expect(rubber(THRESHOLD)).toBe(THRESHOLD);
+    expect(rubber(1)).toBeCloseTo(1, 1);
   });
 
-  it("resists past the threshold and never reaches MAX", () => {
-    expect(rubber(THRESHOLD + 100)).toBeLessThan(THRESHOLD + 100);
-    expect(rubber(THRESHOLD + 100)).toBeGreaterThan(THRESHOLD);
-    expect(rubber(10_000)).toBeLessThanOrEqual(MAX);
-    expect(rubber(10_000)).toBeGreaterThan(MAX - 1);
+  it("gets steadily harder but never goes dead", () => {
+    const slope = (x: number) => rubber(x + 1) - rubber(x);
+    expect(slope(100)).toBeLessThan(slope(0));
+    expect(slope(500)).toBeLessThan(slope(100));
+    expect(slope(1000)).toBeLessThan(slope(500));
+    expect(rubber(2000) - rubber(1000)).toBeGreaterThan(20); // still visibly moving
   });
 
-  it("is continuous at the threshold", () => {
-    expect(rubber(THRESHOLD + 0.001) - rubber(THRESHOLD)).toBeCloseTo(0.001, 3);
+  it("never reaches MAX", () => {
+    expect(rubber(10_000)).toBeLessThan(MAX);
+    expect(rubber(1_000_000)).toBeLessThan(MAX);
   });
 
   it("inverts cleanly", () => {
-    for (const x of [0, 30, 150, 200, 400, 900]) expect(unrubber(rubber(x))).toBeCloseTo(x, 6);
-    expect(unrubber(MAX)).toBeGreaterThan(1000); // clamps instead of blowing up
+    for (const x of [0, 30, 150, 200, 400, 900, 3000]) expect(unrubber(rubber(x))).toBeCloseTo(x, 4);
+    expect(unrubber(MAX)).toBeGreaterThan(10_000); // clamps instead of blowing up
     expect(Number.isFinite(unrubber(MAX + 50))).toBe(true);
   });
 });
