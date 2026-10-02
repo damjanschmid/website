@@ -1,10 +1,10 @@
 "use client";
 
-import { motion, type Variants } from "motion/react";
+import { motion } from "motion/react";
 
 /*
- * Animated icons. They react to the "hover" variant of the closest
- * motion parent, e.g. <motion.button initial="rest" animate="rest" whileHover="hover">.
+ * Icons for the copy-email button. They react to the "hover" variant of the
+ * closest motion parent, e.g. <motion.button initial="rest" animate="rest" whileHover="hover">.
  */
 
 type IconProps = { size?: number; className?: string };
@@ -29,22 +29,21 @@ function Svg({ size = 18, className, children }: IconProps & { children: React.R
   );
 }
 
-/* Envelope whose flap lifts open on hover */
-export function MailIcon(props: IconProps) {
-  const flap: Variants = {
-    rest: { d: "M3.5 7.5 L12 13.5 L20.5 7.5" },
-    hover: { d: "M3.5 7.5 L12 2.5 L20.5 7.5" },
-  };
-  const letter: Variants = {
-    rest: { y: 4, opacity: 0 },
-    hover: { y: -1.5, opacity: 1, transition: { delay: 0.08, type: "spring", stiffness: 400, damping: 20 } },
-  };
+/* Folded paper plane that noses up and edges forward on hover, a little take-off */
+export function PlaneIcon(props: IconProps) {
   return (
-    <Svg {...props}>
-      <motion.rect x="7.5" y="6" width="9" height="7" rx="1" variants={letter} strokeWidth={1.4} />
-      <rect x="3" y="6" width="18" height="13" rx="2.5" />
-      <motion.path variants={flap} transition={{ type: "spring", stiffness: 500, damping: 26 }} />
-    </Svg>
+    <motion.span
+      className="grid"
+      variants={{ rest: { x: 0, y: 0, rotate: 0 }, hover: { x: 2, y: -2, rotate: -10 } }}
+      transition={{ type: "spring", stiffness: 500, damping: 18 }}
+    >
+      <Svg {...props}>
+        {/* outline: nose, wing tip, back junction, tail, fold, bottom tip */}
+        <path d="M19.8 2.2 L2.2 9.2 L7 14.6 L7 19.8 L10.2 17 L14.8 21.6 Z" strokeWidth={2} />
+        {/* crease from the nose to the back */}
+        <path d="M19.8 2.2 L7 14.6" strokeWidth={2} />
+      </Svg>
+    </motion.span>
   );
 }
 

@@ -2,13 +2,13 @@
 
 import { AnimatePresence, motion, useSpring, useTransform } from "motion/react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { CheckIcon, MailIcon } from "@/components/icons";
+import { CheckIcon, PlaneIcon } from "@/components/icons";
 
 const spring = { type: "spring", stiffness: 420, damping: 32 } as const;
 
 /*
  * Shows my email. Click it and it copies to the clipboard:
- * the envelope turns into a check, the text rolls over and
+ * the paper plane turns into a check, the text rolls over and
  * a few sparks fly. Falls back to mailto: if copying fails.
  */
 export function CopyEmail({ email }: { email: string }) {
@@ -61,15 +61,8 @@ export function CopyEmail({ email }: { email: string }) {
           transition={spring}
           aria-label={copied ? "Email copied to clipboard" : `Copy email address ${email}`}
           style={{ width: pillWidth }}
-          className="relative flex h-11 cursor-pointer items-center overflow-hidden rounded-full bg-[#f4f4f5] text-[14px] font-medium text-fg ring-1 ring-black/[0.06] transition-colors duration-200 hover:bg-[#ededee]"
+          className="relative flex h-11 cursor-pointer items-center overflow-hidden rounded-full bg-[#f4f4f5] font-sans text-[14px] font-medium text-fg ring-1 ring-black/[0.06] transition-colors duration-200 hover:bg-[#ededee]"
         >
-          {/* sheen that sweeps across on hover */}
-          <motion.span
-            aria-hidden
-            className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-white/90 to-transparent"
-            variants={{ rest: { x: "0%" }, hover: { x: "500%", transition: { duration: 0.8, ease: "easeInOut" } } }}
-          />
-
           {/* natural-width content; the button animates to match it */}
           <span ref={measure} className="flex w-max shrink-0 items-center gap-2.5 pr-5 pl-4">
             {/* icons stack on top of each other and cross-fade */}
@@ -88,14 +81,15 @@ export function CopyEmail({ email }: { email: string }) {
                   </motion.span>
                 ) : (
                   <motion.span
-                    key="mail"
+                    key="plane"
                     className="absolute inset-0 grid place-items-center text-muted"
-                    initial={{ scale: 0.4, opacity: 0, rotate: 45 }}
-                    animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                    exit={{ scale: 0.4, opacity: 0, y: -6, transition: { duration: 0.15 } }}
+                    initial={{ scale: 0.4, opacity: 0, x: -6, y: 6 }}
+                    animate={{ scale: 1, opacity: 1, x: 0, y: 0 }}
+                    // flies off to the upper right once the email is copied
+                    exit={{ x: 14, y: -14, opacity: 0, transition: { duration: 0.25, ease: [0.4, 0, 1, 1] } }}
                     transition={spring}
                   >
-                    <MailIcon size={18} />
+                    <PlaneIcon size={18} />
                   </motion.span>
                 )}
               </AnimatePresence>

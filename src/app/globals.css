@@ -17,9 +17,9 @@
   --color-accent: var(--accent);
   --color-surface: var(--surface);
 
-  --font-sans: var(--font-geist), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
+  --font-serif: "Times New Roman", Times, "Nimbus Roman", serif;
 }
 
 html {
@@ -33,12 +33,13 @@ html {
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
 }
 
+/* like a marker on paper */
 ::selection {
-  background: var(--accent);
-  color: var(--bg);
+  background: #fff1a8;
+  color: var(--fg);
 }
 
 /* on touch screens the pull-up at the bottom replaces the browser's own bounce */
